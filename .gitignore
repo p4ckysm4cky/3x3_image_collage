@@ -1,0 +1,11 @@
+venv/
+env/
+temp.html
+dump.txt
+setting.json
+tempCodeRunnerFile.py
+__pycache__/
+*.html
+*.csv
+.vscode
+.DS_Store
