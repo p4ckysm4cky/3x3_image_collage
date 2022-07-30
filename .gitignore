@@ -9,3 +9,7 @@ __pycache__/
 *.csv
 .vscode
 .DS_Store
+*.mkv
+*.png
+*.bmp
+.mypy_cache/
