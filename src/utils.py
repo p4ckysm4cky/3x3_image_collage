@@ -1,5 +1,6 @@
 import cv2 as cv
 from typing import List
+from PIL import Image
 import os
 
 
@@ -38,7 +39,7 @@ def videoPosToMillisecond(videoPos: str) -> int:
     Converts hh:mm:ss.ms to milliseconds
     that is used in other function
     """
-    milliseconds = 0
+    milliseconds = 0.0
     hour, minute, second = tuple([float(strNum)
                                  for strNum in videoPos.split(":")])
     milliseconds += hour * 60 * 60 * 1000
@@ -47,8 +48,33 @@ def videoPosToMillisecond(videoPos: str) -> int:
     return round(milliseconds)
 
 
+def makeCollage(column: int, framePaths: List[str], outFilepath) -> None:
+    """
+    Uses the image filepaths to create an image collage which is outputted to outFilepath
+    """
+    firstImage = Image.open(framePaths[0])
+    width, height = firstImage.size
+    frameWidth = width * column
+    frameHeight = height * (round(len(framePaths) / column))
+    frame = Image.new("RGBA", (frameWidth, frameHeight))
+    xPos = 0
+    yPos = 0
+    for framePath in framePaths:
+        tempImage = Image.open(framePath)
+        frame.paste(tempImage, (xPos, yPos))
+        xPos += width
+        if xPos >= frameWidth:
+            xPos = 0
+            yPos += height
+    # Remember to include file extension in the outFilepath as well
+    frame.save(outFilepath, format="png")
+
+
 if __name__ == "__main__":
-    new_array = ["00:01:00", "00:02:09.80", "00:03:00", "00:04:00",
-                 "00:05:00", "00:06:00", "00:07:00", "00:08:00", "00:09:00"]
-    new_array = [videoPosToMillisecond(string) for string in new_array]
-    outFrameFolder("./test1.mkv", new_array, "temp")
+    # new_array = ["00:01:00", "00:02:09.80", "00:03:00", "00:04:00",
+    #              "00:05:00", "00:06:00", "00:07:00", "00:08:00", "00:09:00"]
+    # new_array = [videoPosToMillisecond(string) for string in new_array]
+    # outFrameFolder("./test1.mkv", new_array, "temp")
+    framePaths = ["./temp/frame0.png", "./temp/frame1.png", "./temp/frame2.png", "./temp/frame3.png",
+                  "./temp/frame4.png", "./temp/frame5.png", "./temp/frame6.png", "./temp/frame7.png", "./temp/frame8.png"]
+    makeCollage(3, framePaths, "./out.png")
