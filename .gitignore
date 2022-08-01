@@ -14,3 +14,4 @@ __pycache__/
 *.bmp
 .mypy_cache/
 temp/
+input.txt
